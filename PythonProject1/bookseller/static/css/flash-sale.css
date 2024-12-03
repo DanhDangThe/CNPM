@@ -1,0 +1,17 @@
+.flash-sale-section {
+    background-color:  #FF6C6B;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.flash-sale-section h4 {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.view-all {
+    font-weight: bold;
+    text-transform: uppercase;
+}

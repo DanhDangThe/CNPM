@@ -1,0 +1,120 @@
+{% extends 'layout/base.html' %}
+{% block title %} Trang Chu{% endblock %}
+
+{% block content %}
+
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="3000">
+          <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+          </ol>
+          <div class="carousel-inner ">
+            <div class="carousel-item active">
+              <img  class="banner" src="{{ url_for('static', filename='images/sale-flash.png') }}" alt="Slide 1">
+            </div>
+            <div class="carousel-item">
+              <img class="banner d-block w-100" src="{{ url_for('static', filename='images/black-friday.png') }}" alt="Slide 2">
+            </div>
+            <div class="carousel-item">
+              <img class="banner" src="{{ url_for('static', filename='images/sach-hay.png') }}" alt="Slide 3">
+            </div>
+          </div>
+          <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+    </div>
+     <br> <br>
+    {% if page>1  %}
+            <ul class="pagination">
+                {% for idx in range(1,page+1) %}
+              <li class="page-item"><a class="page-link" href="{{ url_for('index', page=idx) }}">{{idx}}</a></li>
+                {% endfor %}
+            </ul>
+     {% endif %}
+    {% if products %}
+    <div class="row">
+
+            {% for p in products %}
+            <div class="col-md-3 col-xs-12">
+
+                <div class="card" >
+                  <img class="card-img-top" src="{{url_for('static',filename=p.image)}}" alt="{{p.name}}">
+                  <div class="card-body">
+                    <h4 class="card-title">{{p.name}}</h4>
+                    <p class="card-text">{{"{:,.1f}".format(p.price)}}VND</p>
+                    <a href="#" class="btn btn-primary" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }})">Đặt Hàng</a>
+                      <a href="#" class="btn btn-info" >Chi Tiết Sản Phẩm</a>
+                  </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+     {% else %}
+            <p> <i> K co San Pham Nao!!</i></p>
+     {% endif %}
+
+      <div class=" flash-sale-section my-4">
+
+            <div class="row align-items-center backgroup-flash-sale">
+                <div class="col-md-3">
+                    <img src="{{ url_for('static', filename='images/flash-sale.png') }}" alt="Flash Sale" class="img-fluid">
+                </div>
+                <div class="col-md-6 text-center">
+                    <h4 class="text-danger">Kết thúc trong <span id="flash-sale-timer">04:50:47</span></h4>
+                </div>
+                <div class="col-md-3 text-right">
+                    <a href="#" class="btn btn-outline-danger view-all">Xem tất cả ➔</a>
+                </div>
+            </div>
+
+
+
+        <div id="flashSaleCarousel" class="carousel slide mt-3" data-ride="carousel">
+
+            <div class="carousel-inner">
+                {% for i in range(0, products|length, 4) %}
+                <div class="carousel-item {% if i == 0 %}active{% endif %}">
+                    <div class="row">
+                        {% for p in products[i:i+4] %}
+                        <div class="col-md-3 col-6">
+                            <div class="card">
+                                <img class="card-img-top" src="{{url_for('static',filename=p.image)}}" alt="{{p.name}}">
+                                <div class="card-body text-center">
+                                    <h6 class="card-title text-truncate" title="{{p.name}}">{{p.name}}</h6>
+                                    <p class="card-text text-danger font-weight-bold">
+                                        {{"{:,.0f}".format(p.price)}} đ
+
+                                    </p>
+                                    <a href="#" class="btn btn-primary btn-sm">Đặt Hàng</a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <a class="carousel-control-prev" href="#flashSaleCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#flashSaleCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}
+
