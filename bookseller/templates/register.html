@@ -1,0 +1,40 @@
+{% extends 'layout/base.html' %}
+{% block title %} Trang Chu{% endblock %}
+{% block content %}
+{% if err_msg %}
+<div class="alert alert-danger">
+    <h4>{{err_msg}}</h4>
+</div>
+{% endif %}
+<h1 class="text-center text-danger">Đăng Ký Người Dùng</h1>
+<div class="login-container">
+    <form method="post" action="{{url_for('user_rigisrter')}}" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="name">Ho Ten</label>
+            <input type="text" class="form-control" id="name" name="name"required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" name="username" />
+        </div>
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="username"required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="password"required />
+        </div>
+        <div class="form-group">
+            <label for="confirm">Repassword</label>
+            <input type="password" class="form-control" id="confirm" name="confirm"required />
+        </div>
+         <div class="form-group">
+            <label for="confirm">Anh Dai Dien</label>
+            <input type="file" class="form-control" id="avatar" name="avatar"required />
+        </div>
+        <input type="submit" value="DangKY" class="btn btn-danger">
+        <br><br>
+    </form>
+ </div>
+{% endblock %}
