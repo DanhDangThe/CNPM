@@ -1,8 +1,9 @@
 import math
 from itertools import product
 from flask import Flask, render_template, request, redirect, url_for, session,jsonify
-from bookseller import app,db,login
-from flask_login import login_user,logout_user,login_required
+from bookseller import app, db, login
+from flask_login import login_user,logout_user
+from bookseller.models import UserRole
 import utils
 import cloudinary.uploader
 
@@ -15,6 +16,8 @@ def index():
     products = utils.load_products(cate_id=cate_id, kw=keyword, page=page)
     counter = utils.cout_products()
     return render_template('index.html', products=products, page=math.ceil(counter / app.config['PAGE_SIZE']))
+
+
 @app.route("/user_login",methods=['get','post'])
 def user_singin():
     err_msg = ""
@@ -27,14 +30,18 @@ def user_singin():
             next =request.args.get('next','index')
             return redirect(url_for(next))
         else:
-            err_msg="user name hoac password k chinh xac"
+            err_msg="Username hoặc password không chính xác!!"
 
     return render_template('login.html', err_msg=err_msg)
+
+
 @login.user_loader
 def user_load(user_id):
     return utils.get_user_by_id(user_id=user_id)
+
+
 @app.route("/register", methods=['get', 'post'])
-def user_rigisrter():
+def user_register():
     err_msg=""
     if request.method.__eq__('POST'):
         name=request.form.get('name')
@@ -54,15 +61,19 @@ def user_rigisrter():
                 utils.add_user(name=name,username=username,password=password,avatar=avatar_path)
                 return redirect(url_for('user_singin'))
             else:
-                err_msg="Dat Mat Khau K Khop"
+                err_msg="Đặt mật khẩu không khớp!!"
         except Exception as ex:
-            err_msg="He thong Dang Co loi"+str(ex)
+            err_msg="Hệ thống đang có lỗi"+str(ex)
 
     return render_template('register.html',err_msg=err_msg)
+
+
 @app.route("/user_logout")
 def user_singout():
     logout_user()
     return redirect(url_for('user_singin'))
+
+
 @app.route('/api/add-cart', methods=['post'])
 def add_to_cart():
     data =request.json
@@ -85,6 +96,8 @@ def add_to_cart():
         }
     session['cart']=cart
     return jsonify(utils.count_cart(cart))
+
+
 @app.route('/api/update-cart',methods=['put'])
 def update_cart():
     data=request.json
@@ -104,6 +117,8 @@ def detele_cart(product_id):
         del cart[product_id]
         session['cart'] = cart
     return jsonify(utils.count_cart(cart))
+
+
 @app.context_processor
 def common_response():
     return{
@@ -111,5 +126,47 @@ def common_response():
 
         'cart_stats': utils.count_cart(session.get('cart'))
     }
+
+
+@app.route("/login", methods=['get', 'post'])
+def login_process():
+    if request.method.__eq__('POST'):
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        u = utils.auth_user(username=username, password=password)
+        if u:
+            login_user(u)
+            return redirect('/')
+
+    return render_template('login.html')
+
+
+@app.route('/admin/login', methods=['post'])
+def login_admin():
+    username = request.form.get('username')
+    password = request.form.get('password')
+
+    admin = utils.auth_admin(username=username, password=password)
+    if admin:
+        login_user(admin)
+
+    return redirect('/admin')
+
+
+
+
+
+@app.route('/logout')
+def logout_view():
+    logout_user()
+    return redirect('/login')
+
+
+
+
+
+
 if __name__ == "__main__":
+    from bookseller import admin
     app.run(debug=True)

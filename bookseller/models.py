@@ -32,6 +32,8 @@ class Product(db.Model):
 
     def __str__(self):
         return self.name
+
+
 class User(db.Model,UserMixin):
     id=Column(Integer,primary_key=True, autoincrement=True)
     name=Column(String(250),nullable=False)
@@ -113,6 +115,10 @@ if __name__ == '__main__':
         #     pro= Product(name=p['name'], price=p['price'], image=p['image'], description=p['description'], category_id=p['category_id'])
         #     db.session.add(pro)
         db.create_all()
+        db.session.commit()
+        u = User(name='admin', username='admin', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+                 user_role=UserRole.ADMIN)
+        db.session.add(u)
         db.session.commit()
 
 
