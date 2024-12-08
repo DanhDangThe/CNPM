@@ -48,7 +48,7 @@ class ChangRuleView(BaseView):
             return self.render('admin/changerule.html', err_msg='Thành công')
         else:
             return self.render('admin/changerule.html', err_msg='Thông tin không hợp lệ. Vui lòng nhập lại!!')
-        return self.render('admin/changerule.html', err_msg='')
+        return self.render('admin/changerule.html', err_msg='Vui lòng nhập thông tin!!')
 
 
 
