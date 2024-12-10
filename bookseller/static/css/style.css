@@ -8,8 +8,8 @@ h1.subject
 }
 body
 {
-    background-color: white;
-    color: darkblue;
+    background-color: #f0f8ff;
+    color: initial  ;
 }
 table.prodocts
 {
@@ -23,6 +23,9 @@ table.prodocts
 }
 h1, h2, h4 {
     font-family: 'Arial', sans-serif;
+}
+.header{
+border-radius: 10px;
 }
 
 .img-fluid {
@@ -48,7 +51,7 @@ button:hover {
   color: white;
 }
 .custom-text {
-  color: #2C55A5;
+  color: black;
 }
 .icon-container {
     display: flex;
@@ -145,7 +148,7 @@ button:hover {
 }
 .card-img-top {
   width: 100%;
-  height: 400px;
+  height: 350px;
   object-fit: contain;
 
 }
@@ -171,5 +174,74 @@ button:hover {
 background-color: #2C55A5;
  color: white;
 }
+.discount-badge {
+    position: absolute; /* Gắn nhãn ở vị trí cố định trên sản phẩm */
+    top: 10px;          /* Cách viền trên 10px */
+    left: 10px;         /* Cách viền trái 10px */
+    background-color: red; /* Nền màu đỏ nổi bật */
+    color: white;       /* Chữ màu trắng */
+    font-weight: bold;  /* Chữ in đậm */
+    padding: 5px;       /* Khoảng cách bên trong nhãn */
+    border-radius: 5px; /* Góc bo tròn nhẹ */
+    font-size: 14px;    /* Cỡ chữ */
+}
+.background-products{
+     background-color: white;
+     border-radius: 30px
+     margin-left: 30px;
+}
+
+
+.sidebar ul li a {
+    color: #333; /* Màu chữ của liên kết */
+    text-decoration: none; /* Xóa gạch chân */
+}
+
+.sidebar ul li a:hover {
+    color: #007bff; /* Màu chữ khi hover */
+}
+.sidebar {
+    border: 1px solid #ddd; /* Viền xám nhạt */
+    border-radius: 10px; /* Bo góc viền sidebar */
+    padding: 15px; /* Thêm khoảng cách bên trong */
+    background-color: #f8f9fa; /* Màu nền nhẹ */
+}
+
+.sidebar ul {
+    border-radius: 8px; /* Bo góc cho danh sách */
+    padding-left: 15px; /* Thụt lề danh sách */
+}
+
+.sidebar ul li {
+    margin-bottom: 10px; /* Tạo khoảng cách giữa các mục */
+}
+
+.sidebar h5 {
+    text-align: left;
+    margin-left: 5px; /* Thụt nhẹ tiêu đề */
+    font-weight: bold; /* Chữ đậm */
+}
+.detail-img-top {
+  width: 100%;
+  height: 500px;
+  object-fit: contain;
+
+}
+.description-section {
+    background-color: #f9f9f9; /* Màu nền nhạt để dễ nhìn */
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.description-text {
+    font-size: 16px; /* Tăng kích thước chữ */
+    line-height: 1.6; /* Tăng khoảng cách dòng */
+    color: #333; /* Màu chữ đậm để dễ đọc */
+}
+
+
+
 
 

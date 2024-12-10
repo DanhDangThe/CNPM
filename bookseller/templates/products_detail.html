@@ -1,0 +1,98 @@
+{% extends 'layout/base.html' %}
+{% block title %}Chi Tiết Sản Phẩm{% endblock %}
+
+{% block content %}
+<div class="mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Sách Tiếng Việt</a></li>
+            <li class="breadcrumb-item"><a href="#">Văn Học</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tác Phẩm Kinh Điển</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Hình ảnh sản phẩm -->
+       <div class="col-md-4">
+            <div class=" card sidebar background-products " style="height: 100%;">
+                <img class="detail-img-top" src="{{url_for('static',filename=products.image)}}" alt="{{products.name}}">
+                <br>
+                <a href="#" class="btn btn-danger" onclick="addToCart({{ products.id }},'{{ products.name }}',{{ products.price }})">Thêm Vào Giỏ Hàng</a>
+                <br>
+                <a href="#" class="btn btn-info" >Thêm Mục Yêu Thích</a>
+            </div>
+
+        </div>
+
+        <!-- Thông tin sản phẩm -->
+        <div class="col-md-8">
+            <div class="sidebar background-products">
+                <h4>{{ products.name }}</h4>
+                <p class="text-muted">Nhà cung cấp: {{products_detail.SupplierName}} </p>
+                <p class="text-muted">Nhà xuất bản: {{products_detail.author}}</p>
+                <p class="text-muted">Tác giả: {{products_detail.publishing_house}}</p>
+            </div>
+            <br>
+
+            <div class="sidebar background-products">
+                <h5>Thông tin chi tiết</h5>
+                <table class="table table-striped">
+                    <tbody>
+                        <tr>
+                            <th class="text-muted">Mã hàng</th>
+                            <td>9780593736814</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted" >Tên Nhà Cung Cấp</th>
+                            <td><a href="#" class="text-primary">{{products_detail.SupplierName}}</a></td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Tác giả</th>
+                            <td>{{products_detail.publishing_house}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">NXB</th>
+                            <td>Random House</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Năm XB</th>
+                            <td>{{products_detail.year}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Ngôn Ngữ</th>
+                            <td>{{products_detail.language}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Trọng lượng (gr)</th>
+                            <td>{{products_detail.weight}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Kích Thước Bao Bì</th>
+                            <td>{{products_detail.packaging_size}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Số trang</th>
+                            <td>{{products_detail.number_of_pages}}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-muted">Hình thức</th>
+                            <td>{{products_detail.form}}    </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+                <div class="mt-5 sidebar background-products description-section">
+                    <h5>Mô Tả Sản Phẩm</h5>
+                    <p class="description-text">
+                        {{ products.description|safe }}
+                    </p>
+                </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

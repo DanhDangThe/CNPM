@@ -17,6 +17,28 @@ def index():
     counter = utils.cout_products()
     return render_template('index.html', products=products, page=math.ceil(counter / app.config['PAGE_SIZE']))
 
+@app.route("/products/<int:products_id>")
+def products_detail(products_id):
+    products = utils.get_products_by_id(products_id)
+
+    products_detail = utils.get_products_detail_by_id(products_id)
+
+
+
+    
+    return render_template('products_detail.html', products=products, products_detail=products_detail)
+
+@app.route("/produtcs")
+def products():
+    cate_id = request.args.get('category_id')
+    keyword = request.args.get('keyword')
+
+    page = request.args.get("page", 1)
+    page = int(page)
+    price_range = request.args.get('price')
+    products = utils.load_products(cate_id=cate_id, price_range=price_range, kw=keyword, page=page)
+    counter = utils.cout_products()
+    return  render_template('products.html', products=products, page=math.ceil(counter / app.config['PAGE_SIZE']))
 
 @app.route("/user_login",methods=['get','post'])
 def user_singin():
@@ -69,6 +91,9 @@ def user_register():
 
 
 @app.route("/user_logout")
+@app.route("/cart")
+def cart():
+    return render_template('cart.html',stats=utils.count_cart(session.get('cart')))
 def user_singout():
     logout_user()
     return redirect(url_for('user_singin'))

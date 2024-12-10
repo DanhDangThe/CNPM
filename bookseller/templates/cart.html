@@ -1,0 +1,49 @@
+{% extends 'layout/base.html' %}
+{% block title %} Gio Hang{% endblock %}
+
+{% block content %}
+
+        <h1 class>Gio Hàng </h1>
+
+{% if 'cart' in session and session['cart'] %}
+<table class="table">
+    <tr>
+    <th>Ma San Pham</th>
+    <th>Ten San Pham</th>
+    <th>Don Gia</th>
+    <th>So Luong</th>
+    <th></th>
+    </tr>
+    {% for c in session['cart'].values() %}
+    <tr id="product{{c.id}}">
+        <td>{{c.id}}</td>
+        <td>{{c.name}}</td>
+        <td>{{c.price}}</td>
+        <td>
+            <div class="form-group">
+                <input type="number" min="1" onblur="updateCart({{c.id}},this)" value="{{c.quantity}}" class="form-control"/>
+
+            </div>
+        </td>
+        <td>
+            <input type="button" value="xoa" onclick="deleteCart({{c.id}})" class="btn btn-danger">
+        </td>
+        <td></td>
+    </tr>
+    {% endfor %}
+
+</table>
+<div class="alert alert-info">
+        <h5>Tong San Pham: <span class="cartCounter">{{stats.total_quantity}}</span></h5>
+        <h5>Tong Tien : <span id="total-amount"> {{"{:,.1f}".format(stats.total_amount)}} </span> VND</h5>
+ </div>
+{% if current_user.is_authenticated %}
+    <input type="button" value="Thanh toan" class="btn btn-success" onclick="pay()">
+{% else %}
+    <a href="{{url_for('user_singin',next='cart')}}">Dang Nhap De Thanh Toan</a>
+{% endif %}
+<br><br>
+{% else %}
+<p><i>Khong co san pham nao trong gio</i></p>
+{% endif %}
+{% endblock %}

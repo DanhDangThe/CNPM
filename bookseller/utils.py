@@ -3,25 +3,40 @@ from bookseller import app,db
 from flask import render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import  current_user
-from bookseller.models import Category, Product, User, UserRole
+from bookseller.models import Category, Product, User, UserRole,ProductDetail
 
 import hashlib
 
 def read_json(path):
     with open(path,"r") as f:
         return json.load(f)
-
+def get_products_detail_by_id(products_id):
+    print(products_id)
+    return ProductDetail.query.get(products_id)
+def get_products_by_id(products_id):
+    return Product.query.get(products_id)
 
 def load_categories():
     return Category.query.order_by("id").all()
 
 
-def load_products(cate_id=None,kw=None,from_price=None,to_price=None,page=1):
+def load_products(cate_id=None,price_range=None,kw=None,page=1):
     products = Product.query
     if kw:
         products = products.filter(Product.name.contains(kw))
     if cate_id:
         products = products.filter(Product.category_id == cate_id)
+    if price_range:
+        if price_range == '1':
+            products = products.filter(Product.price >= 0, Product.price <= 15000)
+        elif price_range == '2':
+            products = products.filter(Product.price > 15000, Product.price <= 30000)
+        elif price_range == '3':
+            products = products.filter(Product.price > 30000, Product.price <= 50000)
+        elif price_range == '4':
+            products = products.filter(Product.price > 50000, Product.price <= 70000)
+        elif price_range == '5':
+            products = products.filter(Product.price > 70000)
     page_size = app.config['PAGE_SIZE']
     start =(page-1)*page_size
     end=start+page_size

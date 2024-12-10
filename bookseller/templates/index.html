@@ -3,7 +3,8 @@
 
 {% block content %}
 
-    <div id="carouselExampleIndicators" class="carousel slide mt-3" data-ride="carousel" data-interval="3000">
+    <div id="carouselExampleIndicators" class="carousel slide header" data-ride="carousel" data-interval="3000">
+
           <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -29,7 +30,7 @@
             <span class="sr-only">Next</span>
           </a>
     </div>
-     <br> <br>
+     <br>
     {% if page>1  %}
             <ul class="pagination">
                 {% for idx in range(1,page+1) %}
@@ -49,7 +50,7 @@
                     <h4 class="card-title">{{p.name}}</h4>
                     <p class="card-text">{{"{:,.1f}".format(p.price)}}VND</p>
                     <a href="#" class="btn btn-primary" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }})">Đặt Hàng</a>
-                      <a href="#" class="btn btn-info" >Chi Tiết Sản Phẩm</a>
+                      <a href="{{url_for('products_detail',products_id=p.id)}}" class="btn btn-info" >Chi Tiet San Pham</a>
                   </div>
                 </div>
 

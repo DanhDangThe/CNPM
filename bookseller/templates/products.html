@@ -1,0 +1,107 @@
+{% extends 'layout/base.html' %}
+{% block title %} Gio Hang{% endblock %}
+
+{% block content %}
+
+<div class=" mt-4">
+        <div class="row ">
+
+
+            <div class="col-md-3 ">
+                <div class="sidebar background-products">
+                    <h5>Nhóm Sản Phẩm</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{{url_for('products')}}">Tất Cả Sản Phẩm</a></li>
+                         {% for c in categories %}
+                          <li class="nav-item {%  if 'category_id' in request.args and c.id==request.args.category_id|int %} active{% endif%}">
+                            <a class="nav-link" href="{{url_for('products',category_id=c.id)}}">{{ c.name }}</a>
+                          </li>
+                          {% endfor %}
+                    </ul>
+                   <h5>Giá</h5>
+                         <form id="filterForm" method="get" action="{{ url_for('products') }}">
+
+                            <ul class="list-unstyled">
+                                <li>
+                                    <input type="radio" name="price" value="1"
+                                           {% if '1' in request.args.getlist('price') %}checked{% endif %}
+                                           onchange="document.getElementById('filterForm').submit()">
+                                    0đ - 15,000đ
+                                </li>
+                                <li>
+                                    <input type="radio" name="price" value="2"
+                                           {% if '2' in request.args.getlist('price') %}checked{% endif %}
+                                           onchange="document.getElementById('filterForm').submit()">
+                                    15,000đ - 30,000đ
+                                </li>
+                                <li>
+                                    <input type="radio" name="price" value="3"
+                                           {% if '3' in request.args.getlist('price') %}checked{% endif %}
+                                           onchange="document.getElementById('filterForm').submit()">
+                                    30,000đ - 50,000đ
+                                </li>
+                                <li>
+                                    <input type="radio" name="price" value="4"
+                                           {% if '4' in request.args.getlist('price') %}checked{% endif %}
+                                           onchange="document.getElementById('filterForm').submit()">
+                                    50,000đ - 70,000đ
+                                </li>
+                                <li>
+                                    <input type="radio" name="price" value="5"
+                                           {% if '5' in request.args.getlist('price') %}checked{% endif %}
+                                           onchange="document.getElementById('filterForm').submit()">
+                                    70,000đ - Trở Lên
+                                </li>
+                            </ul>
+
+
+                        </form>
+
+                    <h5>Nhà Xuất Bản</h5>
+                    <ul class="list-unstyled">
+                        <li><input type="radio" name="publisher" value="Kim Đồng"> Kim Đồng</li>
+                        <li><input type="radio"  name="publisher" value="Hải Đăng"> Hải Đăng</li>
+                        <li><input type="radio" name="publisher" value="Hàn Thuyên"> Hàn Thuyên</li>
+                        <li><input type="radio" name="publisher" value="NXB Trẻ"> NXB Trẻ</li>
+                        <li><input type="radio" name="publisher" value="1980 Books"> 1980 Books</li>
+                        <li><input type="radio" name="publisher" value="AMAK"> AMAK</li>
+                    </ul>
+                    <h5>Tác Giả</h5>
+                    <ul class="list-unstyled">
+
+                        <li><input type="radio" name="author" value="Alex Gion"> ALex Gion</li>
+                        <li><input type="radio" name="author" value="Âm Tầm"> Âm Tầm</li>
+                        <li><input type="radio" name="author" value="Amoz Oz"> Amoz Oz</li>
+                        <li><input type="radio" name="author" value="Bất Tấm Tam Cửu"> Bât Tấm Tam Cửu</li>
+                        <li><input type="radio" name="author" value="Bình Chi"> Bình Chi</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Products -->
+            <div class="col-md-9">
+                <div class="row g-3">
+                    {% for p in products %}
+                        <div class="col-md-3 col-xs-12">
+
+                            <div class="card" >
+                                <div class="discount-badge">21%</div>
+                              <img class="card-img-top" src="{{url_for('static',filename=p.image)}}" alt="{{p.name}}">
+                              <div class="card-body">
+                                <h4 class="card-title">{{p.name}}</h4>
+                                <p class="card-text">{{"{:,.1f}".format(p.price)}}VND</p>
+                                <a href="#" class="btn btn-primary" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }})">Đặt Hàng</a>
+                                  <a href="#" class="btn btn-info" >Chi Tiết Sản Phẩm</a>
+                              </div>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
