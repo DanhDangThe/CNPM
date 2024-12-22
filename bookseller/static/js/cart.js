@@ -36,7 +36,7 @@ function addToCart( id, name, price) {
     });
 }
 function pay(){
-    if(confirm('Ban Chac Chan Muon Thanh Toan ?')==true){
+    if(confirm('Bạn chắc chắn muốn thanh toán ?')==true){
         fetch('/api/pay', {
             method: 'post'
         })
@@ -71,7 +71,7 @@ function updateCart(id,obj){
         })
 }
 function deleteCart(id){
-    if(confirm("ban co cac chan xoa k")==true)
+    if(confirm("Bạn có chắc chắn xóa không ?")==true)
     {
          fetch('/api/delete-cart/'+id,{
 

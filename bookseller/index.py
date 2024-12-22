@@ -1,9 +1,10 @@
+import json
 import math
 from itertools import product
 from flask import Flask, render_template, request, redirect, url_for, session,jsonify
 from bookseller import app, db, login
-from flask_login import login_user,logout_user
-from bookseller.models import UserRole
+from flask_login import login_user,logout_user, login_required
+from bookseller.models import UserRole, Product, Category
 import utils
 import cloudinary.uploader
 
@@ -40,19 +41,35 @@ def products():
     counter = utils.cout_products()
     return  render_template('products.html', products=products, page=math.ceil(counter / app.config['PAGE_SIZE']))
 
-@app.route("/user_login",methods=['get','post'])
-def user_singin():
+@app.route("/login",methods=['get','post'])
+def user_signin():
     err_msg = ""
     if request.method.__eq__('POST'):
-        user_name= request.form.get('username')
+
+        username= request.form.get('username')
         password=request.form.get('password')
-        user=utils.check_login(user_name,password)
-        if user:
+
+        user=utils.auth_user(username,password)
+        depot = utils.auth_depot(username, password)
+        seller = utils.auth_seller(username, password)
+
+        if depot:
+            login_user(user=depot)
+            with open('data/depot.json', 'r', encoding='utf-8') as file:
+                depot_data = json.load(file)
+            return render_template('depot_manager.html', depot=depot_data)
+        elif seller:
+            login_user(user=seller)
+            return render_template('seller.html')
+        elif user:
             login_user(user=user)
-            next =request.args.get('next','index')
+            next = request.args.get('next', 'index')
             return redirect(url_for(next))
         else:
             err_msg="Username hoặc password không chính xác!!"
+
+
+
 
     return render_template('login.html', err_msg=err_msg)
 
@@ -81,7 +98,7 @@ def user_register():
 
 
                 utils.add_user(name=name,username=username,password=password,avatar=avatar_path)
-                return redirect(url_for('user_singin'))
+                return redirect(url_for('user_signin'))
             else:
                 err_msg="Đặt mật khẩu không khớp!!"
         except Exception as ex:
@@ -90,13 +107,15 @@ def user_register():
     return render_template('register.html',err_msg=err_msg)
 
 
-@app.route("/user_logout")
+
 @app.route("/cart")
 def cart():
     return render_template('cart.html',stats=utils.count_cart(session.get('cart')))
-def user_singout():
+
+@app.route("/user_logout")
+def user_signout():
     logout_user()
-    return redirect(url_for('user_singin'))
+    return redirect(url_for('user_signin'))
 
 
 @app.route('/api/add-cart', methods=['post'])
@@ -153,19 +172,6 @@ def common_response():
     }
 
 
-@app.route("/login", methods=['get', 'post'])
-def login_process():
-    if request.method.__eq__('POST'):
-        username = request.form.get('username')
-        password = request.form.get('password')
-
-        u = utils.auth_user(username=username, password=password)
-        if u:
-            login_user(u)
-            return redirect('/')
-
-    return render_template('login.html')
-
 
 @app.route('/admin/login', methods=['post'])
 def login_admin():
@@ -173,10 +179,20 @@ def login_admin():
     password = request.form.get('password')
 
     admin = utils.auth_admin(username=username, password=password)
+
     if admin:
         login_user(admin)
 
     return redirect('/admin')
+
+
+
+@app.route("/import_book")
+def import_book():
+    cates = utils.load_categories()
+
+    return render_template('import_book.html', categories=cates)
+
 
 
 
@@ -188,8 +204,157 @@ def logout_view():
     return redirect('/login')
 
 
+@app.route("/depot_manager")
+def depot_manager():
+    with open('data/depot.json', 'r', encoding='utf-8') as file:
+        depot_data = json.load(file)
+
+    return render_template('depot_manager.html', depot = depot_data)
+
+@app.route("/seller")
+def seller():
+    return render_template('seller.html')
+
+@app.route("/create_receipt")
+def create_receipt():
+    return render_template('create_receipt.html')
+
+# @app.route('/add_to_depot', methods=['POST'])
+# def add_to_depot():
+#     if request.method.__eq__('POST'):
+#         name = request.form.get('name')
+#         category = request.form.get('category')
+#         author = request.form.get('author')
+#         quantity = request.form.get('quantity')
+#         description = request.form.get('description')
+#         image = request.form.get('book_img')
+#         price = request.form.get('price')
+#
+#         min_quantity_import = int(app.config['min_quantity'])
+#         min_quantity_depot = int(app.config['min_quantity_depot'])
+#
+#         if int(quantity) < min_quantity_import:
+#             err_msg = 'Số luợng nhập không hợp lệ. Vui lòng nhập lại!'
+#             return render_template('import_book.html', err_msg=err_msg)
+#
+#
+#         c = Category.query.get(category)
+#         p = utils.get_product_by_name(name)
+#
+#         if not p:
+#             p1 = Product(name=name, author=author, quantity=quantity, category_id=c.id, description=description,
+#                         image=image, price=price)
+#
+#             db.session.add(p1)
+#             db.session.commit()
+#             err_msg = 'Lưu thành công'
+#             return render_template('import_book.html', err_msg=err_msg)
+#         else:
+#             current_quantity = utils.count_books_by_name(name)
+#
+#             if current_quantity < min_quantity_depot:
+#                 p.quantity += int(quantity)
+#                 db.session.commit()
+#                 err_msg = 'Lưu thành công'
+#                 return render_template('import_book.html', err_msg=err_msg)
+#             else:
+#                 err_msg = 'Số lượng sách tồn đã đủ!!'
+#                 return render_template('import_book.html', err_msg=err_msg)
+
+@app.route('/add_to_depot', methods=['POST'])
+def add_to_depot():
+    if request.method.__eq__('POST'):
+        name = request.form.get('name')
+        category = request.form.get('category')
+        author = request.form.get('author')
+        quantity = request.form.get('quantity')
+        description = request.form.get('description')
+        image = request.form.get('book_img')
+        price = request.form.get('price')
+
+        min_quantity_import = int(app.config['min_quantity'])
+        min_quantity_depot = int(app.config['min_quantity_depot'])
+
+        if int(quantity) < min_quantity_import:
+            err_msg = 'Số luợng nhập không hợp lệ. Vui lòng nhập lại!'
+            return render_template('import_book.html', err_msg=err_msg)
 
 
+
+        p = utils.get_product_by_name(name)
+        c = utils.get_category_by_id(int(category))
+
+        p = {
+            "name": name,
+            "author": author,
+            "quantity": quantity,
+            "category": c.name,
+            "category_id": category,
+            "description": description,
+            "image": image,
+            "price": price
+        }
+
+        file_path = 'data/depot.json'
+        with open(file_path, 'r', encoding='utf-8') as f:
+            depot_data = json.load(f)
+
+        for p1 in depot_data:
+            if p1["name"] == p["name"]:
+                if p1["quantity"] < min_quantity_depot:
+                    p1["quantity"] += int(quantity)
+
+                    err_msg = 'Lưu thành công'
+                    return render_template('import_book.html', err_msg=err_msg)
+                else:
+                    err_msg = 'Số lượng sách tồn đã đủ!!'
+                    return render_template('import_book.html', err_msg=err_msg)
+
+        depot_data.append(p)
+        with open(file_path, 'w', encoding='utf-8') as f:
+            json.dump(depot_data, f)
+        err_msg = 'Lưu thành công'
+
+        return render_template('import_book.html', err_msg=err_msg)
+
+        # if p not in depot_data:
+        #     depot_data.append(p)
+        #     err_msg = 'Lưu thành công'
+        #     return render_template('import_book.html', err_msg=err_msg)
+        # else:
+        #
+        #
+        #     if p['quantity'] < min_quantity_depot:
+        #         p.quantity += int(quantity)
+        #
+        #         err_msg = 'Lưu thành công'
+        #         return render_template('import_book.html', err_msg=err_msg)
+        #     else:
+        #         err_msg = 'Số lượng sách tồn đã đủ!!'
+        #         return render_template('import_book.html', err_msg=err_msg)
+
+
+
+
+        # if not p:
+        #     p1 = Product(name=name, author=author, quantity=quantity, category_id=c.id, description=description,
+        #                 image=image, price=price)
+        #
+        #     db.session.add(p1)
+        #     db.session.commit()
+        #     err_msg = 'Lưu thành công'
+        #     return render_template('import_book.html', err_msg=err_msg)
+        # else:
+        #     current_quantity = utils.count_books_by_name(name)
+        #
+        #     if current_quantity < min_quantity_depot:
+        #         p.quantity += int(quantity)
+        #         db.session.commit()
+        #         err_msg = 'Lưu thành công'
+        #         return render_template('import_book.html', err_msg=err_msg)
+        #     else:
+        #         err_msg = 'Số lượng sách tồn đã đủ!!'
+        #         return render_template('import_book.html', err_msg=err_msg)
 
 
 if __name__ == "__main__":
