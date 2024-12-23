@@ -16,6 +16,10 @@ class AdminView(ModelView):
         return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
 
+class AuthenticatedAdmin(BaseView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
+
 class AuthenticatedView(BaseView):
     def is_accessible(self):
         return current_user.is_authenticated
@@ -64,7 +68,7 @@ class LogoutView(AuthenticatedView):
 
 
 
-class ChangeRuleView(AuthenticatedView):
+class ChangeRuleView(AuthenticatedAdmin):
     @expose("/")
     def index(self):
         min_quantity = request.args.get('min_quantity')
@@ -97,7 +101,7 @@ class ChangeRuleView(AuthenticatedView):
                            min_quantity_depot=app.config['min_quantity_depot'],
                            order_cancel_time=app.config['order_cancel_time'])
 
-class StatsView(AuthenticatedView):
+class StatsView(AuthenticatedAdmin):
     @expose("/")
     def index(self):
         return self.render('admin/stats.html')

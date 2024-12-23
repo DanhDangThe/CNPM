@@ -1,7 +1,10 @@
 import json
 import math
+from idlelib.query import Query
 from itertools import product
 from flask import Flask, render_template, request, redirect, url_for, session,jsonify
+from sqlalchemy.util import methods_equivalent
+
 from bookseller import app, db, login
 from flask_login import login_user,logout_user, login_required
 from bookseller.models import UserRole, Product, Category
@@ -153,6 +156,13 @@ def update_cart():
         session['cart'] = cart
     return jsonify(utils.count_cart(cart))
 
+@app.route('/api/update-price', methods=['put'])
+def update_price():
+    data = request.json
+    prod = data.get('product-select')
+    quantity = data.get('quantity')
+
+
 
 @app.route('/api/delete-cart/<product_id>',methods=['delete'])
 def detele_cart(product_id):
@@ -215,9 +225,17 @@ def depot_manager():
 def seller():
     return render_template('seller.html')
 
-@app.route("/create_receipt")
+
+@app.route('/create_receipt')
 def create_receipt():
-    return render_template('create_receipt.html')
+    prod = Product.query.order_by("id").all()
+    return render_template('create_receipt.html', products = prod)
+
+@app.route('/load_receipt')
+def load_receipt():
+    prod = Product.query.order_by("id").all()
+    return render_template('receipt.html', products = prod)
+
 
 # @app.route('/add_to_depot', methods=['POST'])
 # def add_to_depot():
@@ -273,7 +291,7 @@ def add_to_depot():
         price = request.form.get('price')
 
         min_quantity_import = int(app.config['min_quantity'])
-        min_quantity_depot = int(app.config['min_quantity_depot'])
+        min_quantity_depot = app.config['min_quantity_depot']
 
         if int(quantity) < min_quantity_import:
             err_msg = 'Số luợng nhập không hợp lệ. Vui lòng nhập lại!'
@@ -355,6 +373,69 @@ def add_to_depot():
         #     else:
         #         err_msg = 'Số lượng sách tồn đã đủ!!'
         #         return render_template('import_book.html', err_msg=err_msg)
+
+
+# @app.route("/edit_book/<int:book_id>", methods=["GET", "POST"])
+# def edit_book(book_id):
+#     # Đọc dữ liệu từ file
+#     with open('data/depot.json', 'r', encoding='utf-8') as file:
+#         depot_data = json.load(file)
+#
+#     # Tìm sách cần chỉnh sửa
+#     book_to_edit = next((book for book in depot_data if book['id'] == book_id), None)
+#
+#     if request.method == 'POST':
+#         # Cập nhật thông tin sách
+#         book_to_edit['name'] = request.form['name']
+#         book_to_edit['category'] = request.form['category']
+#         book_to_edit['author'] = request.form['author']
+#         book_to_edit['quantity'] = request.form['quantity']
+#         book_to_edit['description'] = request.form['description']
+#         book_to_edit['image'] = request.form['image']
+#         book_to_edit['price'] = request.form['price']
+#
+#         # Lưu lại dữ liệu vào file
+#         with open('data/depot.json', 'w', encoding='utf-8') as file:
+#             json.dump(depot_data, file, ensure_ascii=False, indent=4)
+#
+#         return redirect(url_for('depot_manager'))
+#
+#     return render_template('edit_book.html', book=book_to_edit)
+
+
+@app.route('/create_invoice', methods=['POST'])
+def create_invoice():
+    data = request.get_json()
+
+    # Dữ liệu hóa đơn
+    customer_name = data['customer_name']
+    invoice_date = data['invoice_date']
+    products = data['products']
+    total_price = data['total_price']
+
+    # Tạo ID cho hóa đơn (ví dụ: có thể sử dụng số tự động)
+    invoice_id = 1  # Đây là ví dụ, bạn cần logic để sinh ID tự động
+
+    # Lưu hóa đơn vào file hoặc cơ sở dữ liệu (ví dụ: JSON)
+    invoice = {
+        'id': invoice_id,
+        'customer_name': customer_name,
+        'invoice_date': invoice_date,
+        'products': products,
+        'total_price': total_price
+    }
+
+    # Lưu vào file JSON (hoặc cơ sở dữ liệu)
+    with open('data/invoices.json', 'a', encoding='utf-8') as file:
+        json.dump(invoice, file, ensure_ascii=False, indent=4)
+        file.write("\n")  # Nếu lưu nhiều hóa đơn, cần phân tách
+
+    return jsonify({"status": "success", "invoice": invoice})
+
+
+
+
+
 
 
 if __name__ == "__main__":

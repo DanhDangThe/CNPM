@@ -23,6 +23,8 @@ def load_categories():
     return Category.query.order_by("id").all()
 
 
+
+
 def load_products(cate_id=None,price_range=None,kw=None,page=1):
     products = Product.query
     if kw:

@@ -3,16 +3,16 @@
 
 {% block content %}
 
-        <h1 class="mt-3 text-danger font-weight-bold text-center">GIỎ HÀNG</h1>
+<h1 class="mt-3 text-danger font-weight-bold text-center">GIỎ HÀNG</h1>
 
 {% if 'cart' in session and session['cart'] %}
 <table class="table">
     <tr>
-    <th>Mã sản phẩm</th>
-    <th>Tên sản phẩm</th>
-    <th>Đơn giá</th>
-    <th>Số lượng</th>
-    <th></th>
+        <th>Mã sản phẩm</th>
+        <th>Tên sản phẩm</th>
+        <th>Đơn giá</th>
+        <th>Số lượng</th>
+        <th></th>
     </tr>
     {% for c in session['cart'].values() %}
     <tr id="product{{c.id}}" class="align-middle">
@@ -21,7 +21,8 @@
         <td class="align-middle">{{c.price}}</td>
         <td class="align-middle">
             <div class="form-group" style="margin-bottom:0">
-                <input style="width:75px" type="number" min="1" onblur="updateCart({{c.id}},this)" value="{{c.quantity}}"
+                <input style="width:75px" type="number" min="1" onblur="updateCart({{c.id}},this)"
+                       value="{{c.quantity}}"
                        class="form-control text-center"/>
             </div>
         </td>
@@ -34,13 +35,13 @@
 
 </table>
 <div class="alert alert-info">
-        <h5>Tổng sản phẩm: <span class="cartCounter">{{stats.total_quantity}}</span></h5>
-        <h5>Tổng tiền: <span id="total-amount"> {{"{:,.1f}".format(stats.total_amount)}} </span> VNĐ</h5>
- </div>
+    <h5>Tổng sản phẩm: <span class="cartCounter">{{stats.total_quantity}}</span></h5>
+    <h5>Tổng tiền: <span id="total-amount"> {{"{:,.1f}".format(stats.total_amount)}} </span> VNĐ</h5>
+</div>
 {% if current_user.is_authenticated %}
-    <input type="button" value="Thanh toán" class="btn btn-success" onclick="pay()">
+<input type="button" value="Thanh toán" class="btn btn-success" onclick="pay()">
 {% else %}
-    <a href="{{url_for('user_signin',next='cart')}}">Đăng nhập</a> để thanh toán
+<a href="{{url_for('user_signin',next='cart')}}">Đăng nhập</a> để thanh toán
 {% endif %}
 <br><br>
 {% else %}
