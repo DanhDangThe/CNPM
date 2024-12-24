@@ -95,4 +95,54 @@
 
 
 </div>
+<hr>
+{% if current_user.is_authenticated %}
+    <div  class=" form-group ">
+        <div class="form-group">
+            <textarea class="form-control" name="content" id="commentId" placeholder="Nhap Noi Dung Binh Luan..."></textarea>
+        </div>
+        <input type="button" onclick="addComment({{products.id}})" class=" btn btn-primary" value="Binh Luan">
+    </div>
+{% else %}
+    <a href="{{url_for('user_singin')}}"> Dang Nhap De Binh Luan</a>
+{% endif %}
+<!-- {% for c in comments %}-->
+<!--    <div class="row">-->
+<!--        <div class="col-md-1 col-xs-4">-->
+<!--            <img src="{{ c.user.avatar }}" class="img-fluid rounded-circle" />-->
+<!--        </div>-->
+<!--        <div class="col-md-11 col-xs-8">-->
+<!--            <p>{{ c.content }}</p>-->
+<!--            <p><em>{{ c.created_date }}</em></p>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--{% endfor %}-->
+ {% if page>1  %}
+            <ul class="pagination">
+                {% for idx in range(1,page+1) %}
+              <li class="page-item"><a class="page-link" href="javascript:;" onclick=" loadComment({{products.id}},{{idx}})">{{idx}}</a></li>
+                {% endfor %}
+            </ul>
+     {% endif %}
+<div id="comments">
+    <div class="row">
+        <div class="col-md-1 col-xs-4">
+            <img src="{{url_for('static',filename='images/1.jpg')}}" class="img-fluid rounded-circle" alt="demo">
+
+        </div>
+        <div class="col-md-11 col-xs-8">
+            <img src="" alt="demo">
+            <p>tuyet voi</p>
+            <p><strong>2021-12-09 12:12</strong></p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    window.onload=function(){
+        loadComment({{products.id}})
+    }
+</script>
+
 {% endblock %}

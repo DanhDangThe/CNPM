@@ -2,4 +2,151 @@
 
 {% block body %}
 <h1 class="text-center text-success">THỐNG KÊ BÁO CÁO</h1>
+    <div class="row">
+        <div class="col-md-5 col-xs-12">
+            <table class="table">
+                <tr>
+                    <th>Mã Sản Phẩm</th>
+                    <th>Tên Sản Phẩm</th>
+                    <th>Doanh Thu</th>
+                </tr>
+                {% for s in stats %}
+                <tr>
+                    <td>{{s[0]}}</td>
+                    <td>{{s[1]}}</td>
+                    <td> {% if s[2] %}
+                        {{"{:,.1f}".format(s[2])}} VND
+                        {% else %}
+                        0 VND
+                         {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-md-5 col-xs-12">
+            <form >
+                <div class="form-group">
+                    <input type="text" class="form-control" name="kw" placeholder="Nhập Từ Khóa Cần Tìm....">
+                </div>
+                 <div class="form-group">
+                    <input type="date" class="from-control" name="from_date">
+                </div >
+                 <div class="form-group">
+                    <input type="date" class="from-control" name="to_date">
+                </div >
+                <input type="submit" value="Thống kê" class="btn btn-info">
+            </form>
+            <canvas id="productChartId"></canvas>
+        </div>
+    </div>
+<div class="row">
+     <div class="col-md-5 col-xs-12">
+         <table>
+             <tr>
+                 <th>Tháng</th>
+                 <th>Doanh Thu</th>
+             </tr>
+             {% for s in month_stats %}
+             <tr>
+                 <td>{{s[0]}}</td>
+                 <td> {{"{:,.1f}".format(s[1])}} VND</td>
+             </tr>
+             {% endfor %}
+         </table>
+     </div>
+    <div class="col-md-5 col-xs-12">
+        <form action="">
+            <div class="from-group">
+                <input type="number" name="year" min="2000" class="form-control" placeholder="Nhâp Năm Cần Tìm..." >
+            </div>
+            <input type="submit" value="Thống Kê" class="btn btn-danger">
+        </form>
+         <canvas id="productMonthChartId"></canvas>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let  labels=[],labels2 =[]
+  let data=[] ,data2=[]
+  let colors=[],colors2=[]
+  let borderColors=[],borderColors2=[]
+  let r,g,b;
+
+  {% for s in stats %}
+    {% if s[2] %}
+      labels.push('{{s[1]}}')
+      data.push({{s[2]}})
+      r=Math.random()*255
+      g=Math.random()*255
+      b=Math.random()*255
+     colors.push(`rgba(${r},${g},${b},0.2)`);
+     borderColors.push(`rgba(${r},${g},${b},1)`);
+     {% endif %}
+  {% endfor %}
+  {% for s in month_stats %}
+
+      labels2.push({{s[0]}})
+      data2.push({{s[1]}})
+      r=Math.random()*255
+      g=Math.random()*255
+      b=Math.random()*255
+     colors2.push(`rgba(${r},${g},${b},0.2)`);
+     borderColors2.push(`rgba(${r},${g},${b},1)`);
+
+  {% endfor %}
+  window.onload=function(){
+      const ctx=document.getElementById('productChartId').getContext('2d')
+      const ctx2=document.getElementById('productMonthChartId').getContext('2d')
+        loadChart(ctx,labels,data,'bar',colors,borderColors)
+        loadMonthChart(ctx2,labels2,data2,'line',colors2,borderColors2)
+
+          }
+    function loadChart(ctx,labels,data,type,colors,borderColors)
+    {
+        new Chart(ctx, {
+                type: type,
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Thống Kê Doanh Thu',
+                    data: data,
+                    backgroundColor:colors,
+                    borderColor:borderColors,
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  }
+                }
+              });
+    }
+     function loadMonthChart(ctx,labels,data,type,colors,borderColors)
+    {
+        new Chart(ctx, {
+                type: type,
+                data: {
+                  labels: labels2,
+                  datasets: [{
+                    label: 'Thống Kê Doanh Thu',
+                    data: data2,
+                    backgroundColor:colors2,
+                    borderColor:borderColors2,
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  }
+                }
+              });
+    }
+</script>
 {% endblock %}

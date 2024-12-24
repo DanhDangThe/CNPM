@@ -2,9 +2,75 @@
 
 {% block body %}
 
+<div class="row">
+    <div class="col-md-5 col-xs-12">
+        <table class="table">
+          <tr>
+            <th>Danh Mục</th>
+            <th>Ten Danh Muc</th>
+            <th>So Luong San Pham</th>
+          </tr>
+            {% for s in stats %}
+              <tr>
+                <td>{{s[0]}}</td>
+                 <td>{{s[1]}}</td>
+                 <td>{{s[2]}}</td>
+              </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-md-7 col-xs-12">
+        <canvas id="myCategoryChart"></canvas>
+    </div>
+</div>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let  labels=[]
+  let data=[]
+  let colors=[]
+  let borderColors=[]
+  let r,g,b;
+
+  {% for s in stats %}
+      labels.push('{{s[1]}}')
+      data.push({{s[2]}})
+      r=Math.random()*255
+      g=Math.random()*255
+      b=Math.random()*255
+     colors.push(`rgba(${r},${g},${b},0.2)`);
+     borderColors.push(`rgba(${r},${g},${b},1)`);
+  {% endfor %}
+  window.onload=function(){
+      const ctx=document.getElementById('myCategoryChart').getContext('2d')
+<!--       const ctx = document.getElementById('myCategoryChart');-->
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Thống Kê Số Sản Phẩm Theo Danh Mục',
+                data: data,
+                backgroundColor:colors,
+                borderColor:borderColors,
+                borderWidth: 1
+              }]
+            },
+            options: {
+              scales: {
+                y: {
+                  beginAtZero: true
+                }
+              }
+            }
+          });
+          }
+</script>
+
 {% if current_user.is_authenticated %}
 <h1 class="text-info">CHÀO MỪNG BẠN ĐẾN TRANG QUẢN TRỊ!</h1>
 <h2 class="text-success">Chào mừng bạn <span>{{current_user.name}} đã quay lại!</span></h2>
+
 {% else %}
 <h1 class="text-center text-info">ĐĂNG NHẬP QUẢN TRỊ</h1>
 <form method="post" action="/admin/login">
@@ -20,4 +86,5 @@
   <button type="submit" class="btn btn-primary">Đăng nhập</button>
 </form>
 {% endif %}
+
 {% endblock %}

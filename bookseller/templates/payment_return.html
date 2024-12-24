@@ -1,0 +1,14 @@
+{% extends 'layout/base.html' %}
+{% block title %}Trang Chủ{% endblock %}
+
+{% block content %}
+    <h1>Kết quả thanh toán</h1>
+    <p>Kết quả: {{ result }}</p>
+    <p>Mã giao dịch: {{ transaction_no }}</p>
+        <script>
+            // Gọi hàm pay() khi trang tải xong
+            document.addEventListener("DOMContentLoaded", function() {
+                pay();
+            });
+        </script>
+{% endblock %}

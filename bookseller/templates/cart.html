@@ -1,8 +1,15 @@
-{% extends 'layout/base.html' %}
-{% block title %} Gio Hang{% endblock %}
 
-{% block content %}
+<br>
 
+<div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between">
+                <div class="step active">1. Đăng nhập - đăng ký</div>
+                <div class="step ">2. Địa chỉ giao hàng</div>
+                <div class="step">3. Thanh toán và đặt mua</div>
+            </div>
+        </div>
+    </div>
         <h1 class>Gio Hàng </h1>
 
 {% if 'cart' in session and session['cart'] %}
@@ -38,7 +45,7 @@
         <h5>Tong Tien : <span id="total-amount"> {{"{:,.1f}".format(stats.total_amount)}} </span> VND</h5>
  </div>
 {% if current_user.is_authenticated %}
-    <input type="button" value="Thanh toan" class="btn btn-success" onclick="pay()">
+    <input type="button" value="Thanh toan" class="btn btn-success" onclick="callPay()">
 {% else %}
     <a href="{{url_for('user_singin',next='cart')}}">Dang Nhap De Thanh Toan</a>
 {% endif %}
@@ -46,4 +53,14 @@
 {% else %}
 <p><i>Khong co san pham nao trong gio</i></p>
 {% endif %}
-{% endblock %}
+<!-- Modal -->
+<div id="paymentModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h3>Chọn phương thức thanh toán</h3>
+          <button  class="btn btn-primary btn-block " name="next-btn">Thanh toán trực tuyến</button>
+
+        <button class="btn btn-secondary" onclick="pay1()">Thanh toán trực tiếp</button>
+    </div>
+</div>
+

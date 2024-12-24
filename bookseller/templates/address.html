@@ -1,0 +1,76 @@
+
+<div class="container mt-5">
+    <!-- Steps Navigation -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="d-flex justify-content-between">
+                <div class="step active">1. Đăng nhập - đăng ký</div>
+                <div class="step active">2. Địa chỉ giao hàng</div>
+                <div class="step">3. Thanh toán và đặt mua</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Address Form -->
+    <div class="row">
+        <div class="col-lg-8">
+            <h2 class="mb-4">Địa Chỉ Giao Hàng</h2>
+            {% if err_msg %}
+    <div class="alert alert-danger">{{ err_msg }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('add_address') }}">
+        <div class="form-group">
+            <label for="fullName">* Họ và Tên</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Nhập họ và tên" required>
+        </div>
+        <div class="form-group">
+            <label for="phone">* Số điện thoại</label>
+            <input type="tel" class="form-control" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
+        </div>
+        <div class="form-group">
+            <label for="address">* Địa chỉ</label>
+            <input type="text" class="form-control" id="address" name="address" placeholder="Nhập địa chỉ cụ thể" required>
+        </div>
+        <div class="form-group">
+            <label for="city">* Tỉnh/Thành phố</label>
+            <input type="text" class="form-control" id="city" name="city" placeholder="Nhập tỉnh/thành phố" required>
+        </div>
+        <div class="form-group">
+            <label for="district">* Quận/Huyện</label>
+            <input type="text" class="form-control" id="district" name="district" placeholder="Nhập quận/huyện">
+        </div>
+        <div class="form-group">
+            <label for="ward">* Xã/Phường</label>
+            <input type="text" class="form-control" id="ward" name="ward" placeholder="Nhập xã/phường">
+        </div>
+        <button type="submit" class="btn btn-danger" >Lưu Địa Chỉ</button>
+        <br>
+    </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Đơn Hàng</h5>
+                    <div class="d-flex justify-content-between">
+                        <span>Chữa Lành Tâm Trí x1</span>
+                        <span>113.980đ</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <span>Tạm tính:</span>
+                        <span>113.980đ</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Phí vận chuyển:</span>
+                        <span>22.000đ</span>
+                    </div>
+                    <hr>
+                    <p class="text-right font-weight-bold">Thành tiền: 135.980đ (VAT)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

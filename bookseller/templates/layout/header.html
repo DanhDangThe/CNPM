@@ -1,9 +1,10 @@
 <nav class="navbar navbar-expand-md custom-bg navbar-light">
+
     <a class="navbar-brand" href="{{url_for('index')}}">
-        <img src="{{url_for('static',filename='images/1.jpg')}}" alt="Logo" style="width: 100px;">
+        <img src="{{url_for('static',filename='images/kali.jpg')}}" alt="Logo" style="width: 130px;">
     </a>
-    <form class="form-inline mx-auto" method="GET" action="{{ url_for('products') }}">
-        <input class="form-control" name="keyword" type="text" placeholder="Nhập Từ Khóa...">
+    <form class="d-flex mx-auto" method="GET" action="{{ url_for('products') }}">
+        <input class="form-control search-bar" name="keyword" type="text" placeholder="Nhập Từ Khóa...">
         <button class="btn btn-danger" type="submit">
             <i class="bi bi-search"></i>
         </button>
@@ -16,7 +17,7 @@
     </div>
 
     <a href="{{url_for('cart')}}"><div class="icon">
-        <div class="bi bi-cart"><span class="badge badge-info cartCounter" >  0  </span></div>
+        <div class="bi bi-cart"><span class="badge badge-info cartCounter" > {{cart_stats.total_quantity}}  </span></div>
             <span>Giỏ Hàng</span>
         </div>
     </a>
@@ -53,5 +54,6 @@
                     {% endif %}
                 </div>
 
-    </div>
+        </div>
+
 </nav>

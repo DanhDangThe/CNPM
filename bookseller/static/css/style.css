@@ -15,12 +15,15 @@ table.prodocts
 {
     border-collapse:collapse;
     width:100%;
+
 }
 .contrainer
 {
     width: 80%;
     margin: 0 auto;
+    flex: 1;
 }
+
 h1, h2, h4 {
     font-family: 'Arial', sans-serif;
 }
@@ -47,7 +50,7 @@ button:hover {
     transform: scale(1.1);
 }
 .custom-bg {
-  background-color: #2C55A5;
+  background-color: #000066;;
   color: white;
 }
 .custom-text {
@@ -100,7 +103,7 @@ button:hover {
     display: block;
 }
 .navbar {
-    background-color: #2C55A5;
+    background-color: #000066;
     padding: 10px 20px;
 }
 
@@ -115,7 +118,7 @@ button:hover {
 }
 
 .form-control {
-    width: 400px;
+    width: 700px;
     margin-right: 10px;
     border-radius: 20px;
 }
@@ -173,6 +176,7 @@ button:hover {
 .footer{
 background-color: #2C55A5;
  color: white;
+ margin:0 auto
 }
 .discount-badge {
     position: absolute; /* Gắn nhãn ở vị trí cố định trên sản phẩm */
@@ -240,8 +244,143 @@ background-color: #2C55A5;
     line-height: 1.6; /* Tăng khoảng cách dòng */
     color: #333; /* Màu chữ đậm để dễ đọc */
 }
+ .step {
+      width: 100%;
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      font-weight: bold;
+}
+ .step.active {
+   background-color: #007bff;
+   color: white;
+}
+ .step:not(.active) {
+     background-color: #e9ecef;
+    color: #6c757d;
+ }
+.order-summary {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: #f8f9fa;
+}
+ .order-summary .item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #dee2e6;
+    padding: 5px 0;
+}
+.total {
+    color: red;
+    font-weight: bold;
+    text-align: right;
+}
+.form-label {
+    font-weight: bold;
+}
+/* Style cho modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    justify-content: center;
+    align-items: center;
+}
 
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    text-align: center;
+}
 
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+.footer {
+  background-color: #000066; /* Background màu xanh đậm */
+  color: white; /* Màu chữ trắng */
+  padding: 20px 40px;
+}
+
+.footer .container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-section {
+  flex: 1;
+  margin: 10px;
+  min-width: 200px;
+}
+
+.footer-section h2 {
+  color: #FFCC00; /* Màu vàng nổi bật cho logo */
+  margin-bottom: 10px;
+}
+
+.footer-section h4 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li a {
+  text-decoration: none;
+  color: white; /* Màu chữ trắng cho các liên kết */
+  margin: 5px 0;
+  display: block;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: red; /* Màu vàng khi hover */
+}
+
+.social-icons img,
+.payment-icons img {
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: white;
+}
+
+.social-icons img,
+.payment-icons img {
+  border-radius: 50%; /* Bo góc tròn */
+  width: 40px; /* Kích thước icon */
+  height: 40px; /* Kích thước icon */
+  margin: 5px; /* Khoảng cách giữa các icon */
+  transition: transform 0.3s; /* Hiệu ứng khi hover */
+}
+
+.social-icons img:hover,
+.payment-icons img:hover {
+  transform: scale(1.1); /* Phóng to nhẹ khi hover */
+}
 
 
 

@@ -7,6 +7,9 @@ from flask_admin.contrib.sqla import ModelView
 from flask_admin import BaseView, expose, AdminIndexView
 from flask import redirect, request, render_template
 from flask_login import current_user
+from datetime import datetime
+
+
 
 
 
@@ -55,10 +58,22 @@ class ChangRuleView(BaseView):
 class StatsView(BaseView):
     @expose("/")
     def index(self):
-        return self.render('admin/stats.html')
+        kw=request.args.get('kw')
+        from_date=request.args.get('from_date')
+        to_date=request.args.get('to_date')
+        year=request.args.get('year',datetime.now().year)
+        return self.render('admin/stats.html'
+                           ,month_stats=utils.product_month_stats(year=year)
+                           ,stats=utils.product_stats(kw)
+                           ,from_date=utils.product_stats(from_date)
+                           ,to_date=utils.product_stats(to_date)
+                           )
+class MyAdminIndex(AdminIndexView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/index.html',stats=utils.category_stats())
 
-
-admin = Admin(app=app, name='Quản lý nhà sách', template_mode='bootstrap4')
+admin = Admin(app=app, name='Quản lý nhà sách', template_mode='bootstrap4',index_view=MyAdminIndex())
 admin.add_view(ChangRuleView(name='Thay đổi quy định'))
 admin.add_view(StatsView(name='Thống kê báo cáo'))
 

@@ -1,0 +1,110 @@
+{% extends 'layout/base.html' %}
+{% block title %} Gio Hang{% endblock %}
+
+{% block content %}
+  <div class=" mt-4">
+    <div class="row mb-4">
+      <div class="col">
+        <div class="d-flex justify-content-between">
+          <div class="step active">1. Đăng nhập - đăng ký</div>
+          <div class="step active">2. Địa chỉ giao hàng</div>
+          <div class="step active">3. Thanh toán và đặt mua</div>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar background-products text-center">
+      <h2>Hoàn Tất Thanh Toán</h2>
+    </div>
+    <br>
+
+    <div class="row ">
+
+      <div class="col-md-7 ">
+        <div class="sidebar background-products">
+
+          <div class="card-body">
+            {% if addresses %}
+    {% for address in addresses %}
+     <div class="address-item">
+    <p><i class="fas fa-user"></i> {{ address.full_name }}</p>
+    <p><i class="fas fa-map-marker-alt"></i> {{ address.address }}</p>
+    <p><i class="fas fa-city"></i> {{ address.city }}, {{ address.state }} - {{ address.country }}</p>
+    <p><i class="fas fa-phone"></i> Phone: {{ address.phone_number }}</p>
+    {% if address.is_default %}
+        <p><i class="fas fa-check-circle text-success"></i> <strong>Địa chỉ mặc định</strong></p>
+    {% endif %}
+</div>
+    {% endfor %}
+{% else %}
+    <p>Chưa có địa chỉ giao hàng. Vui lòng thêm một địa chỉ.</p>
+{% endif %}
+          </div>
+
+        </div>
+        <br>
+        <div class="sidebar background-products">
+          <h5>Phương Thức Thanh Toán</h5>
+          <form action="/payment" method="POST" id="paymentForm">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod" value="cod" id="cod" checked>
+              <label class="form-check-label" for="cod">Thanh toán khi nhận hàng</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod" value="bankTransfer" id="bankTransfer">
+              <label class="form-check-label" for="bankTransfer">Chuyển khoản ngân hàng</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod" value="creditCard" id="creditCard">
+              <label class="form-check-label" for="creditCard">Thẻ quốc tế Visa, Master (qua ZaloPay)</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod" value="zalopay" id="zalopay">
+              <label class="form-check-label" for="zalopay">Thanh toán bằng ZaloPay</label>
+            </div>
+            <!-- VNPay payment option -->
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="paymentMethod" value="vnpay" id="vnpay">
+              <label class="form-check-label" for="vnpay">Thanh toán bằng VNPay</label>
+            </div>
+            <button  class="btn btn-danger mt-4 w-100">HOÀN TẤT ĐẶT MUA →</button>
+          </form>
+        </div>
+        <br>
+        <h5 class="mt-4">Ghi Chú</h5>
+        <div class="form-group">
+          <textarea class="form-control" rows="3" placeholder="Ghi chú"></textarea>
+        </div>
+
+      </div>
+      <!-- Products -->
+      <div class="col-md-5">
+        <div class="sidebar background-products text-center">
+          <h3>Đơn Hàng</h3>
+          {% for c in session['cart'].values() %}
+            <hr>
+        <div class="item d-flex justify-content-between align-items-center">
+            <div class="product-image">
+                {% if c.image %}
+                    <img src="{{ url_for('static', filename=c.image) }}" alt="{{ c.name }}" style="width: 50px; height: 50px; object-fit: cover;">
+                {% else %}
+                    <img src="{{ url_for('static', filename='images/1.jpg') }}" alt="Default Image" style="width: 50px; height: 50px; object-fit: cover;">
+                {% endif %}
+            </div>
+            <div class="product-details">
+
+                <span>{{ c.name }}</span>
+                <span>{{ c.price }}</span>
+                <span>{{ c.quantity }}</span>
+            </div>
+        </div>
+        {% endfor %}
+          <p class="d-flex justify-content-between"><span>Tạm tính:</span><span>879.140đ</span></p>
+          <p class="d-flex justify-content-between"><span>Phí vận chuyển:</span><span>15.000đ</span></p>
+          <p class="total d-flex justify-content-between font-weight-bold"><span>Thành tiền:</span><span>894.140đ (Đã bao gồm VAT)</span></p>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+{% endblock %}
