@@ -3,8 +3,13 @@
     <a class="navbar-brand" href="{{url_for('index')}}">
         <img src="{{url_for('static',filename='images/kali.jpg')}}" alt="Logo" style="width: 130px;">
     </a>
+<<<<<<< HEAD
     <form class="d-flex mx-auto" method="GET" action="{{ url_for('products') }}">
         <input class="form-control search-bar" name="keyword" type="text" placeholder="Nhập Từ Khóa...">
+=======
+    <form class="form-inline mx-auto" method="GET" action="{{ url_for('products') }}">
+        <input class="form-control" name="keyword" type="text" placeholder="Nhập từ khóa...">
+>>>>>>> 9f32c33634b2ac59e299e7fe939bb7130d511c23
         <button class="btn btn-danger" type="submit">
             <i class="bi bi-search"></i>
         </button>
@@ -13,12 +18,17 @@
     <div class="icon-container ml-3">
     <div class="icon">
         <div class="bi bi-bell"></div>
-        <span>Thông Báo</span>
+        <span>Thông báo</span>
     </div>
 
     <a href="{{url_for('cart')}}"><div class="icon">
+<<<<<<< HEAD
         <div class="bi bi-cart"><span class="badge badge-info cartCounter" > {{cart_stats.total_quantity}}  </span></div>
             <span>Giỏ Hàng</span>
+=======
+        <div class="bi bi-cart"><span class="badge badge-info cartCounter" >  0  </span></div>
+            <span>Giỏ hàng</span>
+>>>>>>> 9f32c33634b2ac59e299e7fe939bb7130d511c23
         </div>
     </a>
 
@@ -34,16 +44,16 @@
                                 {{current_user.username}}
                               </a>
                                   <div class="dropdown-menu">
-                                <a href="{{url_for('user_singout')}}">
+                                <a href="{{url_for('user_signout')}}">
                                     <button class="btn btn-danger">Đăng xuất</button>
                                 </a>
                             </div>
                     {% else %}
                         <div class="icon">
                             <div class="bi bi-person"></div>
-                            <div>Tài Khoản</div>
+                            <div>Tài khoản</div>
                             <div class="dropdown-menu">
-                                <a href="{{url_for('user_singin')}}">
+                                <a href="{{url_for('user_signin')}}">
                                     <button class="btn btn-danger">Đăng nhập</button>
                                 </a>
                                 <a href="{{url_for('user_register')}}">

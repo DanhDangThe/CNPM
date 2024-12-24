@@ -1,0 +1,75 @@
+{% extends 'depot_manager.html' %}
+
+{% block depot %}
+<div class="container mt-3">
+    <div>
+        <div>
+            <h1 class="text-center text-success">NHẬP SÁCH</h1>
+            {% if err_msg == "Lưu thành công" %}
+            <div class="alert alert-success">{{err_msg}}</div>
+            {% elif err_msg %}
+            <div class="alert alert-danger">{{err_msg}}</div>
+            {% endif %}
+            <form id="book-form" method="post" action="/add_to_depot" class="w-50 mb-5" style="margin: 0 auto">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Tên sách:</label>
+                    <input type="text" class="form-control" id="name" name="name"
+                           placeholder="Tập làm quen với chữ cái cho bé">
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Thể loại:</label>
+                    <select class="form-control" id="category" name="category">
+                        {% for c in categories %}
+                        <option value="{{ c.id }}">{{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="author" class="form-label">Tác giả:</label>
+                    <input type="text" class="form-control" id="author" name="author" placeholder="Nguyễn Văn A">
+                </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Số lượng:</label>
+                    <input type="number" min="1" class="form-control" id="quantity" name="quantity" placeholder="1">
+                </div>
+                <div class="mb3">
+                    <label for="book_img">Ảnh sách:</label>
+                    <input type="file" class="form-control" id="book_img" name="book_img"/>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Mô tả:</label>
+                    <input class="form-control" id="description" name="description" placeholder="Sách dành cho các em nhỏ tập làm quen với chữ cái">
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Giá:</label>
+                    <input type="number" class="form-control" id="price" name="price" placeholder="1" min="1">
+                </div>
+                <div class="mb-3">
+                    <label for="import_date" class="form-label">Ngày nhập:</label>
+                    <input type="date" class="form-control" id="import_date" name="import_date"
+                           placeholder="2023-01-01">
+                </div>
+                <!--                <button type="button" class="btn btn-primary" id="add-book-btn">Thêm</button>-->
+                <button type="submit" class="btn btn-primary ms-4">Nhập</button>
+
+            </form>
+
+<!--                        <div class="mt-4">-->
+<!--                            <h3>Danh sách nhập: </h3>-->
+<!--                            <table class="table" id="book-table">-->
+<!--                                <tr>-->
+<!--                                    <th>STT</th>-->
+<!--                                    <th>Sách</th>-->
+<!--                                    <th>Thể loại</th>-->
+<!--                                    <th>Tác giả</th>-->
+<!--                                    <th>Số lượng</th>-->
+<!--                                </tr>-->
+
+<!--                            </table>-->
+<!--                        </div>-->
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -40,6 +40,10 @@ function addToCart( id, name, price,image) {
     });
 }
 function pay(){
+<<<<<<< HEAD
+=======
+    if(confirm('Bạn chắc chắn muốn thanh toán ?')==true){
+>>>>>>> 9f32c33634b2ac59e299e7fe939bb7130d511c23
         fetch('/api/pay', {
             method: 'post'
         })
@@ -99,7 +103,7 @@ function updateCart(id,obj){
         })
 }
 function deleteCart(id){
-    if(confirm("ban co cac chan xoa k")==true)
+    if(confirm("Bạn có chắc chắn xóa không ?")==true)
     {
          fetch('/api/delete-cart/'+id,{
 

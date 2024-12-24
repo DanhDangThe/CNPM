@@ -1,5 +1,5 @@
 {% extends 'layout/base.html' %}
-{% block title %} Trang Chu{% endblock %}
+{% block title %} Trang chủ{% endblock %}
 
 {% block content %}
 
@@ -10,7 +10,7 @@
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
           </ol>
-          <div class="carousel-inner ">
+          <div class="carousel-inner mt-3">
             <div class="carousel-item active">
               <img  class="banner" src="{{ url_for('static', filename='images/sale-flash.png') }}" alt="Slide 1">
             </div>
@@ -48,9 +48,17 @@
                   <img class="card-img-top" src="{{url_for('static',filename=p.image)}}" alt="{{p.name}}">
                   <div class="card-body">
                     <h4 class="card-title">{{p.name}}</h4>
+
                     <p class="card-text">{{"{:,.1f}".format(p.price)}}VND</p>
                     <a href="#" class="btn btn-primary" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }},'{{p.image}}')"><i class="bi bi-cart-plus"></i></a>
                       <a href="{{url_for('products_detail',products_id=p.id)}}" class="btn btn-info" >Chi Tiết Sản Phẩm</a>
+
+                    <p class="card-text text-danger font-weight-bold">{{"{:,.0f}".format(p.price)}} VNĐ</p>
+                    <div class="row text-center">
+                        <a href="#" class="btn btn-primary mr-2 ml-2" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }})">Đặt hàng</a>
+                        <a href="{{url_for('products_detail',products_id=p.id)}}" class="btn btn-info" >Chi tiết sản phẩm</a>
+                    </div>
+
                   </div>
                 </div>
 
@@ -58,7 +66,7 @@
             {% endfor %}
         </div>
      {% else %}
-            <p> <i> K co San Pham Nao!!</i></p>
+            <p> <i> KHÔNG có sản phẩm nào!!</i></p>
      {% endif %}
 
       <div class=" flash-sale-section my-4">
@@ -86,14 +94,14 @@
                         {% for p in products[i:i+4] %}
                         <div class="col-md-3 col-6">
                             <div class="card">
-                                <img class="card-img-top" src="{{url_for('static',filename=p.image)}}" alt="{{p.name}}">
+                                <img class="card-img-top" src="{{url_for('static', filename=p.image)}}" alt="{{p.name}}">
                                 <div class="card-body text-center">
-                                    <h6 class="card-title text-truncate" title="{{p.name}}">{{p.name}}</h6>
+                                    <h6 class="card-title text-truncate" title="{{ p.name }}">{{ p.name }}</h6>
                                     <p class="card-text text-danger font-weight-bold">
-                                        {{"{:,.0f}".format(p.price)}} đ
+                                        {{"{:,.0f}".format(p.price)}} VNĐ
 
                                     </p>
-                                    <a href="#" class="btn btn-primary btn-sm">Đặt Hàng</a>
+                                    <a href="#" class="btn btn-primary btn-sm">Đặt hàng</a>
                                 </div>
                             </div>
                         </div>

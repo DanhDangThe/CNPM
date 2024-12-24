@@ -1,0 +1,89 @@
+{% extends 'seller.html' %}
+
+{% block seller %}
+<div class="container mt-4">
+    <h2 class="text-center text-success">LẬP HÓA ĐƠN</h2>
+
+    <form id="receipt-form" class="w-50" style="margin: 0 auto">
+
+        <div>
+            <label for="customer-name">Tên khách hàng:</label>
+            <input type="text" class="form-control" id="customer-name" name="customer_name" required>
+        </div>
+
+        <div class="mt-2">
+            <label for="receipt-date">Ngày:</label>
+            <input type="date" class="form-control" id="receipt-date" name="receipt_date" required>
+        </div>
+
+        <div class="mt-2">
+            <label for="product-select">Chọn sách:</label>
+            <select class="form-control" id="product-select">
+                <option>-</option>
+                {% for p in products %}
+                <option value="{{ p.id }}" data-name="{{ p.name }}"
+                        data-price="{{ p.price }}" data-category="{{p.category}}">{{ p.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mt-2">
+            <label for="category">Thể loại:</label>
+
+            <input type="text" class="form-control" id="category" name="category" readonly>
+        </div>
+
+        <div class="mt-2">
+            <label for="quantity">Số lượng:</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" min="1" value="1">
+        </div>
+
+        <div class="mt-2">
+            <label for="price">Giá:</label>
+            <input type="number" class="form-control" id="price" name="price"
+                   min="1" value="" readonly>
+        </div>
+
+        <button type="button" class="btn btn-primary mt-2" onclick="addProductToReceipt()">Thêm sản phẩm</button>
+        <div id="product-warning" class="alert alert-warning" style="display: none;">
+            Vui lòng chọn sản phẩm.
+        </div>
+    </form>
+
+    <h3 class="mt-4">Sản phẩm trong hóa đơn:</h3>
+    <table class="table table-bordered" id="receipt-products-table">
+        <thead>
+        <tr>
+            <th>Sách</th>
+            <th>Thể loại</th>
+            <th>Số lượng</th>
+            <th>Đơn giá</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <!-- Tổng giá trị hóa đơn -->
+    <!--    <h4>Tổng giá trị hóa đơn: <span id="total-price">0</span> VNĐ</h4>-->
+    <div class="alert alert-info">
+        <h5>Tổng sản phẩm: <span id="total-quantity"></span></h5>
+        <h5>Tổng tiền: <span id="total-price"></span> VNĐ</h5>
+    </div>
+
+    <!-- Nút lập hóa đơn -->
+    <a href="{{url_for('load_receipt')}}">
+        <button type="submit" class="btn btn-success mb-5">Lập hóa đơn</button>
+    </a>
+
+
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{url_for('static',filename='js/create_receipt.js')}}"></script>
+{% endblock %}

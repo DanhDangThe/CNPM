@@ -1,3 +1,4 @@
+import enum
 import random
 from unittest.mock import DEFAULT
 
@@ -12,24 +13,33 @@ from bookseller import db, app
 from enum import Enum as UserEnum
 import hashlib
 from flask_login import UserMixin
-class UserRole(UserEnum):
+
+
+class UserRole(enum.Enum):
     ADMIN=1
     USER=2
+    DEPOT_MANAGER=3
+    SELLER=4
 
 class BaseModel(db.Model):
     __abstract__=True
     id =Column(Integer,primary_key=True,autoincrement=True)
-class Category(BaseModel):
 
+
+class Category(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
     products=relationship('Product', backref='category', lazy=True)
 
-class Product(db.Model):
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    def __str__(self):
+        return self.name
+
+class Product(BaseModel):
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
+    author= Column(String(50), nullable=False)
     price = Column(Float, default=0)
     image = Column(String(100), nullable=True)
+    quantity = Column(Integer, default=1)
     category_id = Column(Integer, ForeignKey(Category.id), nullable=False)
     detail = relationship('ProductDetail', backref='product', uselist=False)
     receipt_details = relationship('ReceiptDetail', backref='product', lazy=True)
@@ -38,6 +48,9 @@ class Product(db.Model):
 
     def __str__(self):
         return self.name
+
+
+
 class ProductDetail(BaseModel):
     SupplierName=Column(String(50),nullable=False)
     author=Column(String(50),nullable=False)
@@ -52,12 +65,16 @@ class ProductDetail(BaseModel):
 
 
 
+
 class User(db.Model,UserMixin):
+
+class User(BaseModel,UserMixin):
+
     id=Column(Integer,primary_key=True, autoincrement=True)
     name=Column(String(250),nullable=False)
     username = Column(String(100), nullable=False, unique=True)
     password =Column(String(100),nullable=False)
-    avatar=Column(String(100))
+    avatar=Column(String(100), nullable=True)
     active=Column(Boolean, default=True)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
     joined_date=Column(DateTime, default=datetime.now())
@@ -115,8 +132,10 @@ class DeliveryAddress(BaseModel):
 
 
 if __name__ == '__main__':
-
     with app.app_context():
+
+        db.create_all()
+
         # d2 = ProductDetail(
         #     SupplierName='Kim Đồng1',
         #     author='Yoshito Usui, Takata Mirei1',
@@ -129,6 +148,7 @@ if __name__ == '__main__':
         #     form='Bìa Mềm1',
         #     product_id='1')
         # db.session.add_all([d2])
+
     # cd1 = Category(name='Sách Học')
     # c1 = Category(name='Tiểu Thuyết')
     # c1 = Category(name='Truyên Tranh')
@@ -138,7 +158,19 @@ if __name__ == '__main__':
     #     c4 = Category(name='Ngôn Tình')
     #     c5 = Category(name='Light Novel')
     #     db.session.add_all([c1, c2, c3,c4,c5])
-        db.session.commit()
+
+
+        # cd1 = Category(name='Sách học')
+        # c1 = Category(name='Tiểu Thuyết')
+        # c2 = Category(name='Truyên Tranh')
+        # c3 = Category(name='Truyện ngắn - Tản Văn')
+        # c4 = Category(name='Tác Phẩm Kinh Điển')
+        # c5 = Category(name='Huyền Bí - Giả Tưởng - Kinh Dị')
+        # c6 = Category(name='Ngôn Tình')
+        # c7 = Category(name='Light Novel')
+        # db.session.add_all([cd1, c1, c2, c3,c4,c5, c6, c7])
+        # db.session.commit()
+
     #     Data=[{
     #          "id": 1,
     #          "name": "Tôi thích dáng  vẻ Nỗ Lực Của Chính Mình",
@@ -207,11 +239,25 @@ if __name__ == '__main__':
     #     for p in Data:
     #         pro= Product(name=p['name'], price=p['price'], image=p['image'], description=p['description'], category_id=p['category_id'])
     #         db.session.add(pro)
+
         db.create_all()
         db.session.commit()
     #     # u = User(name='admin', username='admin', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
         #          user_role=UserRole.ADMIN)
         # db.session.add(u)
+
+    #     db.create_all()
+    #     db.session.commit()
+
+        # u = User(name='admin', username='admin', password=str(hashlib.md5('123456'.encode('utf-8')).hexdigest()),
+        #          user_role=UserRole.ADMIN)
+        # # # db.session.add(u)
+        # u1 = User(name='depot_manager', username='depot',password=str(hashlib.md5('111'.encode('utf-8')).hexdigest()),
+        #           user_role=UserRole.DEPOT_MANAGER)
+        # u2 = User(name='seller', username='seller', password=str(hashlib.md5('111'.encode('utf-8')).hexdigest()),
+        #           user_role=UserRole.SELLER)
+        # db.session.add_all([u, u1, u2])
+
         # db.session.commit()
 
 

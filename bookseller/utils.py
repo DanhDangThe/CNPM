@@ -3,10 +3,15 @@ from bookseller import app,db,SMTP_SERVER,SMTP_PORT,SENDER_EMAIL,SENDER_PASSWORD
 from flask import render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import  current_user
+
 from bookseller.models import Category, Product, User, UserRole,ProductDetail,Receipt,ReceiptDetail,DeliveryAddress,Comment,ReceiptUnpaid,ReceiptDetailUnpaid
 from sqlalchemy import func
 from flask import current_app
 from sqlalchemy.sql import extract
+
+from bookseller.models import Category, Product, User, UserRole,ProductDetail
+from sqlalchemy import func
+
 import hashlib
 import smtplib
 from email.mime.text import MIMEText
@@ -15,14 +20,18 @@ from email.mime.multipart import MIMEMultipart
 def read_json(path):
     with open(path,"r") as f:
         return json.load(f)
+
 def get_products_detail_by_id(products_id):
     print(products_id)
     return ProductDetail.query.get(products_id)
+
 def get_products_by_id(products_id):
     return Product.query.get(products_id)
 
 def load_categories():
     return Category.query.order_by("id").all()
+
+
 
 
 def load_products(cate_id=None,price_range=None,kw=None,page=1):
@@ -52,11 +61,25 @@ def cout_products():
     return Product.query.count()
 
 
-def check_login(username,password):
+def auth_user(username,password):
     if username and password :
         password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
         return User.query.filter(User.username.__eq__(username.strip()),User.password.__eq__(password)).first()
 
+def auth_admin(username, password):
+    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
+    return User.query.filter(User.username.__eq__(username),
+                             User.password.__eq__(password), User.user_role.__eq__(UserRole.ADMIN)).first()
+
+def auth_depot(username, password):
+    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
+    return User.query.filter(User.username.__eq__(username),
+                             User.password.__eq__(password), User.user_role.__eq__(UserRole.DEPOT_MANAGER)).first()
+
+def auth_seller(username, password):
+    password = str(hashlib.md5(password.encode('utf-8')).hexdigest())
+    return User.query.filter(User.username.__eq__(username),
+                             User.password.__eq__(password), User.user_role.__eq__(UserRole.SELLER)).first()
 
 def get_user_by_id(user_id):
     return User.query.get(user_id)
@@ -153,6 +176,7 @@ def add_receipt_unpaid(cart):
             db.session.add(receiptUnpaid)  # Thêm vào session
             db.session.flush()  # Đảm bảo id của receiptUnpaid được tạo trước khi dùng
 
+
             # Thêm các sản phẩm vào ReceiptDetailUnpaid
             for c in cart.values():
                 # Kiểm tra xem product_id có hợp lệ không
@@ -177,9 +201,23 @@ def auth_user(username, password):
 
     return User.query.filter(User.username.__eq__(username.strip()), User.password.__eq__(password)).first()
 
+def count_books_by_name(product_name):
+    # Truy vấn số lượng sản phẩm theo tên
+    count = db.session.query(func.sum(Product.quantity)).filter(Product.name == product_name).scalar()
+    # Nếu không có sản phẩm, trả về 0
+    return count if count else 0
 
-def get_user_by_id(user_id):
-    return User.query.get(user_id)
+
+def get_product_by_name(product_name):
+    return Product.query.filter_by(name=product_name).first()
+
+def get_category_by_id(id):
+    return Category.query.get(id)
+
+
+
+
+
 
 
 def auth_admin(username, password):
@@ -272,3 +310,4 @@ def send_notification_email(user_id, subject, body):
         send_email(user_email, subject, body)  # Gửi email nếu tìm thấy email người dùng
     else:
         print(f"Không tìm thấy người dùng với ID: {user_id}")
+

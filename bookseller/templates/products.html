@@ -11,7 +11,7 @@
                 <div class="sidebar background-products">
                     <h5>Nhóm Sản Phẩm</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{{url_for('products')}}">Tất Cả Sản Phẩm</a></li>
+                        <li><a href="{{url_for('products')}}">Tất cả sản phẩm</a></li>
                          {% for c in categories %}
                           <li class="nav-item {%  if 'category_id' in request.args and c.id==request.args.category_id|int %} active{% endif%}">
                             <a class="nav-link" href="{{url_for('products',category_id=c.id)}}">{{ c.name }}</a>
@@ -57,7 +57,7 @@
 
                         </form>
 
-                    <h5>Nhà Xuất Bản</h5>
+                    <h5>Nhà xuất bản</h5>
                     <ul class="list-unstyled">
                         <li><input type="radio" name="publisher" value="Kim Đồng"> Kim Đồng</li>
                         <li><input type="radio"  name="publisher" value="Hải Đăng"> Hải Đăng</li>
@@ -90,8 +90,15 @@
                               <div class="card-body">
                                 <h4 class="card-title">{{p.name}}</h4>
                                 <p class="card-text">{{"{:,.1f}".format(p.price)}}VND</p>
+
                                 <a href="#" class="btn btn-primary" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }},'{{p.image}}')">Thêm Vào Giỏ</a>
                                   <a href="{{url_for('products_detail',products_id=p.id)}}" class="btn btn-info" >Chi Tiết Sản Phẩm</a>
+
+                                <div class="row">
+                                  <a href="#" class="btn btn-primary" onclick="addToCart({{ p.id }},'{{ p.name }}',{{ p.price }})">Đặt Hàng</a>
+                                  <a href="#" class="btn btn-info" >Chi tiết sản phẩm</a>
+                                </div>
+
                               </div>
                             </div>
 

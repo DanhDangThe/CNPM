@@ -1,5 +1,10 @@
 
+{% extends 'layout/base.html' %}
+{% block title %} Giỏ hàng{% endblock %}
+
+
 <br>
+
 
 <div class="row mb-4">
         <div class="col">
@@ -12,46 +17,54 @@
     </div>
         <h1 class>Gio Hàng </h1>
 
+<h1 class="mt-3 text-danger font-weight-bold text-center">GIỎ HÀNG</h1>
+
+
 {% if 'cart' in session and session['cart'] %}
 <table class="table">
     <tr>
-    <th>Ma San Pham</th>
-    <th>Ten San Pham</th>
-    <th>Don Gia</th>
-    <th>So Luong</th>
-    <th></th>
+        <th>Mã sản phẩm</th>
+        <th>Tên sản phẩm</th>
+        <th>Đơn giá</th>
+        <th>Số lượng</th>
+        <th></th>
     </tr>
     {% for c in session['cart'].values() %}
-    <tr id="product{{c.id}}">
-        <td>{{c.id}}</td>
-        <td>{{c.name}}</td>
-        <td>{{c.price}}</td>
-        <td>
-            <div class="form-group">
-                <input type="number" min="1" onblur="updateCart({{c.id}},this)" value="{{c.quantity}}" class="form-control"/>
-
+    <tr id="product{{c.id}}" class="align-middle">
+        <td class="align-middle pl-5">{{c.id}}</td>
+        <td class="align-middle">{{c.name}}</td>
+        <td class="align-middle">{{c.price}}</td>
+        <td class="align-middle">
+            <div class="form-group" style="margin-bottom:0">
+                <input style="width:75px" type="number" min="1" onblur="updateCart({{c.id}},this)"
+                       value="{{c.quantity}}"
+                       class="form-control text-center"/>
             </div>
         </td>
-        <td>
-            <input type="button" value="xoa" onclick="deleteCart({{c.id}})" class="btn btn-danger">
+        <td class="align-middle">
+            <input type="button" value="Xóa" onclick="deleteCart({{c.id}})" class="btn btn-danger">
         </td>
-        <td></td>
+        <td class="align-middle"></td>
     </tr>
     {% endfor %}
 
 </table>
 <div class="alert alert-info">
-        <h5>Tong San Pham: <span class="cartCounter">{{stats.total_quantity}}</span></h5>
-        <h5>Tong Tien : <span id="total-amount"> {{"{:,.1f}".format(stats.total_amount)}} </span> VND</h5>
- </div>
+    <h5>Tổng sản phẩm: <span class="cartCounter">{{stats.total_quantity}}</span></h5>
+    <h5>Tổng tiền: <span id="total-amount"> {{"{:,.1f}".format(stats.total_amount)}} </span> VNĐ</h5>
+</div>
 {% if current_user.is_authenticated %}
+
     <input type="button" value="Thanh toan" class="btn btn-success" onclick="callPay()">
+
+<input type="button" value="Thanh toán" class="btn btn-success" onclick="pay()">
+
 {% else %}
-    <a href="{{url_for('user_singin',next='cart')}}">Dang Nhap De Thanh Toan</a>
+<a href="{{url_for('user_signin',next='cart')}}">Đăng nhập</a> để thanh toán
 {% endif %}
 <br><br>
 {% else %}
-<p><i>Khong co san pham nao trong gio</i></p>
+<p><i>KHÔNG có sản phẩm nào trong giỏ!!</i></p>
 {% endif %}
 <!-- Modal -->
 <div id="paymentModal" class="modal" style="display: none;">
